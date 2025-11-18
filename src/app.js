@@ -7,9 +7,9 @@ const app = express();
 // Middleware
 app.use(express.json());
 
-const developerJourney = require('./api/v1/developer_journeys/router')
+const developerJourney = require('./api/developer_journeys/router')
 
-const v1 = '/api/v1';
+const v1 = '/api';
 
 // Import the correct middlewares
 const notFoundMiddleware = require('./middlewares/not-found');
