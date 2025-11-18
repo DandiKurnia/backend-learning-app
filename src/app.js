@@ -1,0 +1,38 @@
+const express = require('express');
+const dotenv = require('dotenv');
+
+dotenv.config();
+const app = express();
+
+// Middleware
+app.use(express.json());
+
+const developerJourney = require('./api/v1/developer_journeys/router')
+
+const v1 = '/api/v1';
+
+// Import the correct middlewares
+const notFoundMiddleware = require('./middlewares/not-found');
+const handleErrorMiddleware = require('./middlewares/handle-errors');
+
+// Routes
+app.get('/', (req, res) => {
+    res.status(200).json({
+        message: 'Welcome to api Learning App'
+    });
+});
+
+app.use(v1, developerJourney);
+
+// 404 middleware should be placed after routes
+app.use(notFoundMiddleware);
+
+// Error handler middleware should be placed last
+app.use(handleErrorMiddleware);
+
+// Set default port if not defined in .env
+const Port = process.env.PORT || 3000;
+
+app.listen(Port, () => {
+    console.log(`Server is running on port ${Port}`);
+});
