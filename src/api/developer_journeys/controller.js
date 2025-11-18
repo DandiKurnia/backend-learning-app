@@ -47,7 +47,7 @@ const update = async (req, res, next) => {
         res.status(StatusCodes.OK).json({
             data: result,
             status: StatusCodes.OK,
-            message: 'Updated successfully'
+            message: 'Updated successfully' 
         })
     } catch (err) {
         next(err);
