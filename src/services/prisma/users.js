@@ -13,7 +13,7 @@ const generateAccessToken = (user) => {
             displayName: user.display_name
         },
         process.env.JWT_SECRET || 'fallback_secret_key',
-        { expiresIn: '60m' }
+        { expiresIn: '1d' }
     );
 };
 

@@ -65,4 +65,18 @@ model DeveloperJourneyTutorial {
 
   developerJourney DeveloperJourney @relation(fields: [developer_journey_id], references: [id])
   author           User             @relation(fields: [author_id], references: [id])
+
+  questions      DeveloperJourneyTutorialQuestion[]
+  
+}
+
+model DeveloperJourneyTutorialQuestion {
+  id           Int      @id @default(autoincrement())
+  tutorial_id  Int
+  question_text String
+  position     Int
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  tutorial DeveloperJourneyTutorial @relation(fields: [tutorial_id], references: [id])
 }
