@@ -56,7 +56,19 @@ const getOneJourney = async (req) => {
   try {
     const id = parseInt(req.params.id);
 
-    const result = await prisma.developerJourney.findUnique({ where: { id } });
+    const result = await prisma.developerJourney.findUnique({ 
+      where: { id } ,
+      include: {
+        tutorials: {
+          select: {
+            id: true,
+            title: true,
+          },
+        },
+      }
+    }, 
+
+  );
     if (!result) throw new NotFoundError('Journey not found');
 
     return result;
@@ -145,6 +157,8 @@ const deleteJourney = async (req) => {
     return await prisma.developerJourney.delete({
       where: { id },
     });
+
+    
   } catch (error) {
     console.error('Error deleting developer journey:', error);
     throw error;

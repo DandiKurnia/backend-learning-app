@@ -9,6 +9,8 @@ app.use(express.json());
 
 const developerJourney = require('./api/developer_journeys/router');    
 const users = require('./api/users/router');
+const developerJourneyTutorials = require('./api/developer_journey_tutorials/router');
+
 
 const api = '/api';
 
@@ -25,6 +27,7 @@ app.get('/', (req, res) => {
 
 app.use(api, developerJourney);
 app.use(api , users);
+app.use(api, developerJourneyTutorials);
 
 // 404 middleware should be placed after routes
 app.use(notFoundMiddleware);

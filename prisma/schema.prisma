@@ -24,6 +24,8 @@ model User{
   user_role Int
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
+
+  tutorials      DeveloperJourneyTutorial[]
 }
 
 model Authentication {
@@ -45,4 +47,22 @@ model DeveloperJourney {
   dead_line DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
+
+  tutorials      DeveloperJourneyTutorial[]
+}
+
+
+model DeveloperJourneyTutorial {
+  id                   Int      @id @default(autoincrement())
+  developer_journey_id Int
+  title                String
+  position             Int
+  status               String
+  created_at           DateTime @default(now())
+  updated_at           DateTime @updatedAt
+  author_id            Int
+
+
+  developerJourney DeveloperJourney @relation(fields: [developer_journey_id], references: [id])
+  author           User             @relation(fields: [author_id], references: [id])
 }
