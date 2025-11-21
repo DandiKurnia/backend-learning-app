@@ -46,7 +46,7 @@ const getOneDeveloperJourneyTutorial = async (developerJourneyId, tutorialId) =>
   });
 
   if (!developerJourney) {
-    throw new BadRequestError('Developer journey not found');
+    throw new NotFoundError('Developer journey not found');
   }
 
   const result = await prisma.developerJourneyTutorial.findUnique({
@@ -90,7 +90,7 @@ const createDeveloperJourneyTutorial = async (req) => {
         });
 
         if (!developerJourney) {
-            throw new BadRequestError('Developer journey not found');
+            throw new NotFoundError('Developer journey not found');
         }
 
         const exists = await prisma.developerJourneyTutorial.findFirst({
