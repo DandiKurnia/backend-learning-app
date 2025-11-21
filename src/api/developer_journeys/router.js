@@ -1,13 +1,15 @@
-const express = require('express')
+const express = require('express');
+const auth = require('../../middlewares/auth');
 
-const { index, create, find, update, destroy } = require('./controller')
-const router = express();
+const { index, create, find, update } = require('./controller');
+const router = express.Router();
 
+// Endpoint yang tidak memerlukan autentikasi
 router.get('/journeys', index);
-router.post('/journeys', create);
-router.get('/journeys/:id', find);  
-router.put('/journeys/:id', update);
-router.delete('/journeys/:id', destroy);
 
+// Endpoint yang memerlukan autentikasi
+router.post('/journeys', auth, create);
+router.get('/journeys/:id', auth, find);
+router.put('/journeys/:id', auth, update);
 
 module.exports = router;
