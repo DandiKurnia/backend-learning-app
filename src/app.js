@@ -11,7 +11,7 @@ const developerJourney = require('./api/developer_journeys/router');
 const users = require('./api/users/router');
 const developerJourneyTutorials = require('./api/developer_journey_tutorials/router');
 const developerJourneyTutorialQuestions = require('./api/developer_journey_tutorial_questions/router');
-
+const tutorialQuestionsOptions = require('./api/tutorial_questions_options/router');
 
 
 const api = '/api';
@@ -31,6 +31,7 @@ app.use(api, developerJourney);
 app.use(api , users);
 app.use(api, developerJourneyTutorials);
 app.use(api, developerJourneyTutorialQuestions);
+app.use(api, tutorialQuestionsOptions);
 
 // 404 middleware should be placed after routes
 app.use(notFoundMiddleware);

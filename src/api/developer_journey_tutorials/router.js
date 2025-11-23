@@ -5,7 +5,7 @@ const { createTutorialSchema, updateTutorialSchema } = require('../../validation
 
 
 const { index, find, create, update, destroy } = require('./controller')
-const router = express();
+const router = express.Router();
 
 router.get('/journeys/:developerJourneyId/tutorials', auth, index)
 router.get('/journeys/:developerJourneyId/tutorials/:tutorialId', auth, find)

@@ -29,12 +29,7 @@ const getAllDeveloperJourneyTutorials = async (developerJourneyId) => {
     }
   });
 
-  // Tambahkan nama developer journey ke setiap tutorial
-  return result.map(tutorial => ({
-    ...tutorial,
-    developer_journey_name: tutorial.developerJourney.name,
-    developer_journey_summary: tutorial.developerJourney.summary
-  }));
+  return result
 };
 
 const getOneDeveloperJourneyTutorial = async (developerJourneyId, tutorialId) => {
@@ -60,6 +55,13 @@ const getOneDeveloperJourneyTutorial = async (developerJourneyId, tutorialId) =>
           name: true,
           summary: true
         }
+      },
+      questions: {
+        select: {
+          id: true,
+          question_text: true,
+          position: true
+        }
       }
     }
   });
@@ -68,11 +70,7 @@ const getOneDeveloperJourneyTutorial = async (developerJourneyId, tutorialId) =>
     throw new NotFoundError('Tutorial not found');
   }
 
-  return {
-    ...result,
-    developer_journey_name: result.developerJourney.name,
-    developer_journey_summary: result.developerJourney.summary
-  };
+  return result
 };
 
 const createDeveloperJourneyTutorial = async (req) => {
@@ -164,7 +162,7 @@ const updateDeveloperJourneyTutorial = async (req) => {
             }
         }
 
-        const result = await prisma.developerJourneyTutorial.update({
+        const tutorialWithJourney = await prisma.developerJourneyTutorial.update({
             where: {
                 id: parseInt(tutorialId)
             },
@@ -176,9 +174,9 @@ const updateDeveloperJourneyTutorial = async (req) => {
         });
 
         // Include developer journey information
-        const tutorialWithJourney = await prisma.developerJourneyTutorial.findUnique({
+        const result = await prisma.developerJourneyTutorial.findUnique({
             where: {
-                id: result.id
+                id: tutorialWithJourney.id
             },
             include: {
                 developerJourney: {
@@ -186,15 +184,18 @@ const updateDeveloperJourneyTutorial = async (req) => {
                         name: true,
                         summary: true
                     }
+                },
+                questions: {
+                    select: {
+                        id: true,
+                        question_text: true,
+                        position: true
+                    }
                 }
             }
         });
 
-        return {
-            ...tutorialWithJourney,
-            developer_journey_name: tutorialWithJourney.developerJourney.name,
-            developer_journey_summary: tutorialWithJourney.developerJourney.summary
-        };
+        return result
     } catch (error) {
         console.log('Error updating developer journey tutorial:', error);
         throw error;
@@ -202,8 +203,8 @@ const updateDeveloperJourneyTutorial = async (req) => {
 };
 
 const deleteDeveloperJourneyTutorial = async (developerJourneyId, tutorialId) => {
-  // Check if the developer journey exists
-  const developerJourney = await prisma.developerJourney.findUnique({
+  try {
+      const developerJourney = await prisma.developerJourney.findUnique({
     where: {
       id: parseInt(developerJourneyId)
     }
@@ -213,7 +214,6 @@ const deleteDeveloperJourneyTutorial = async (developerJourneyId, tutorialId) =>
     throw new BadRequestError('Developer journey not found');
   }
 
-  // Check if the tutorial exists and belongs to the developer journey
   const tutorial = await prisma.developerJourneyTutorial.findUnique({
     where: {
       id: parseInt(tutorialId),
@@ -225,14 +225,24 @@ const deleteDeveloperJourneyTutorial = async (developerJourneyId, tutorialId) =>
     throw new NotFoundError('Tutorial not found');
   }
 
-  // Delete the tutorial
+  await prisma.developerJourneyTutorialQuestion.deleteMany({
+    where: {
+      tutorial_id: parseInt(tutorialId)
+    }
+  });
+
   await prisma.developerJourneyTutorial.delete({
     where: {
       id: parseInt(tutorialId)
     }
   });
 
-  return result;
+  return tutorial;
+  } catch (error) {
+    console.log('Error deleting developer journey tutorial:', error);
+    throw error;
+  }
+
 };
 
 module.exports = {

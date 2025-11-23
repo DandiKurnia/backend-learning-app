@@ -79,4 +79,19 @@ model DeveloperJourneyTutorialQuestion {
   updated_at   DateTime @updatedAt
 
   tutorial DeveloperJourneyTutorial @relation(fields: [tutorial_id], references: [id])
+
+  options      TutorialOption[]
 }
+
+model TutorialOption {
+  id           Int      @id @default(autoincrement())
+  question_id  Int
+  option_label String
+  option_text  String
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  // RELATION
+  question DeveloperJourneyTutorialQuestion @relation(fields: [question_id], references: [id])
+}
+
