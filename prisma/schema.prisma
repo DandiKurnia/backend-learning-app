@@ -14,43 +14,42 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User{
-  id Int @id @default(autoincrement())
-  display_name String @unique
-  name String
-  email String @unique
-  password String
-  phone String
-  user_role Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+model User {
+  id           Int      @id @default(autoincrement())
+  display_name String   @unique
+  name         String
+  email        String   @unique
+  password     String
+  phone        String
+  user_role    Int
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now())
 
-  tutorials      DeveloperJourneyTutorial[]
+  tutorials         DeveloperJourneyTutorial[]
+  examRegistrations ExamRegistration[]
 }
 
 model Authentication {
-  id        Int      @id @default(autoincrement())
-  token     String   @unique
+  id    Int    @id @default(autoincrement())
+  token String @unique
 }
-
 
 model DeveloperJourney {
-  id Int @id @default(autoincrement())
-  name String @unique
-  summary String
-  point Int @default(0)
-  required_point Int @default(0)
-  xp Int @default(0)
-  required_xp Int @default(0)
-  status Int @default(0)
-  listed Int @default(0)
-  dead_line DateTime
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  id             Int      @id @default(autoincrement())
+  name           String   @unique
+  summary        String
+  point          Int      @default(0)
+  required_point Int      @default(0)
+  xp             Int      @default(0)
+  required_xp    Int      @default(0)
+  status         Int      @default(0)
+  listed         Int      @default(0)
+  dead_line      DateTime
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now())
 
-  tutorials      DeveloperJourneyTutorial[]
+  tutorials DeveloperJourneyTutorial[]
 }
-
 
 model DeveloperJourneyTutorial {
   id                   Int      @id @default(autoincrement())
@@ -62,25 +61,25 @@ model DeveloperJourneyTutorial {
   updated_at           DateTime @updatedAt
   author_id            Int
 
-
   developerJourney DeveloperJourney @relation(fields: [developer_journey_id], references: [id])
   author           User             @relation(fields: [author_id], references: [id])
 
-  questions      DeveloperJourneyTutorialQuestion[]
-  
+  questions         DeveloperJourneyTutorialQuestion[]
+  examRegistrations ExamRegistration[]
 }
 
 model DeveloperJourneyTutorialQuestion {
-  id           Int      @id @default(autoincrement())
-  tutorial_id  Int
+  id            Int      @id @default(autoincrement())
+  tutorial_id   Int
   question_text String
-  position     Int
-  created_at   DateTime @default(now())
-  updated_at   DateTime @updatedAt
+  position      Int
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
 
   tutorial DeveloperJourneyTutorial @relation(fields: [tutorial_id], references: [id])
 
-  options      TutorialOption[]
+  options     TutorialOption[]
+  examAnswers ExamAnswer[]
 }
 
 model TutorialOption {
@@ -88,10 +87,56 @@ model TutorialOption {
   question_id  Int
   option_label String
   option_text  String
+  is_correct   Boolean
   created_at   DateTime @default(now())
   updated_at   DateTime @updatedAt
 
   // RELATION
-  question DeveloperJourneyTutorialQuestion @relation(fields: [question_id], references: [id])
+  question    DeveloperJourneyTutorialQuestion @relation(fields: [question_id], references: [id])
+  examAnswers ExamAnswer[]
+}
+
+model ExamRegistration {
+  id               Int       @id @default(autoincrement())
+  tutorial_id      Int
+  examinees_id     Int
+  status           String
+  created_at       DateTime  @default(now())
+  updated_at       DateTime  @updatedAt
+  deadline_at      DateTime?
+  exam_finished_at DateTime?
+  deleted_at       DateTime?
+
+  examinee User                     @relation(fields: [examinees_id], references: [id])
+  tutorial DeveloperJourneyTutorial @relation(fields: [tutorial_id], references: [id])
+
+  answers ExamAnswer[]
+  result  ExamResult?
+}
+
+model ExamAnswer {
+  id                   Int      @id @default(autoincrement())
+  exam_registration_id Int
+  question_id          Int
+  option_id            Int
+  is_correct           Boolean
+  created_at           DateTime @default(now())
+  updated_at           DateTime @updatedAt
+
+  registration ExamRegistration                 @relation(fields: [exam_registration_id], references: [id])
+  question     DeveloperJourneyTutorialQuestion @relation(fields: [question_id], references: [id])
+  option       TutorialOption                   @relation(fields: [option_id], references: [id])
+}
+
+model ExamResult {
+  id                   Int       @id @default(autoincrement())
+  exam_registration_id Int       @unique
+  total_questions      Int
+  score                Float
+  is_passed            Boolean
+  created_at           DateTime  @default(now())
+  look_report_at       DateTime?
+
+  registration ExamRegistration @relation(fields: [exam_registration_id], references: [id])
 }
 

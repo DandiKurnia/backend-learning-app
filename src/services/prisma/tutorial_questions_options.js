@@ -24,7 +24,7 @@ const getAllTutorialQuestionsOptions = async (req) => {
 
 const createTutorialQuestionOption = async (req) => {
     try {
-        const { option_label, option_text } = req.body;
+        const { option_label, option_text, is_correct } = req.body;
 
         const TutorialQuestions = await prisma.developerJourneyTutorialQuestion.findUnique({
             where: {
@@ -52,6 +52,7 @@ const createTutorialQuestionOption = async (req) => {
             data: {
                 option_label,
                 option_text,
+                is_correct,
                 question_id: parseInt(req.params.questionId)
             }
         })
@@ -68,7 +69,7 @@ const createTutorialQuestionOption = async (req) => {
 
 const updateTutorialQuestionOption = async (req) => {
     try {
-        const { option_text } = req.body;
+        const { option_text, is_correct } = req.body;
         const TutorialQuestionsOption = await prisma.tutorialOption.findUnique({
             where: {
                 id: parseInt(req.params.optionId)
@@ -95,7 +96,8 @@ const updateTutorialQuestionOption = async (req) => {
                 id: parseInt(req.params.optionId)
             },
             data: {
-                option_text
+                option_text,
+                is_correct
             }
         })
         return result;
