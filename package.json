@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "start": "node ./src/app.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --runInBand",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:coverage:module": "jest --coverage --collectCoverageFrom=src/middlewares/auth.js --collectCoverageFrom=src/middlewares/validate.js --collectCoverageFrom=src/services/prisma/developer_journey_tutorial_questions.js --collectCoverageFrom=src/api/developer_journey_tutorial_questions/controller.js --collectCoverageFrom=src/validations/developer_journey_tutorial_questions.js",
+    "test:coverage:users": "jest --coverage --collectCoverageFrom=src/validations/user.js --collectCoverageFrom=src/services/prisma/users.js --collectCoverageFrom=src/api/users/controller.js",
     "start:dev": "nodemon ./src/app.js",
     "prisma:generate": "prisma generate"
   },
@@ -24,9 +28,12 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "@types/jest": "^30.0.0",
     "eslint": "^9.39.1",
     "globals": "^16.5.0",
+    "jest": "^30.2.0",
     "nodemon": "^3.1.11",
-    "prisma": "^6.19.0"
+    "prisma": "^6.19.0",
+    "supertest": "^7.1.4"
   }
 }
