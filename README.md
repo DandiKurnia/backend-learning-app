@@ -6,12 +6,6 @@ Base URL: `https://api.danbildad.my.id`
 
 ## Authentication
 
-Most endpoints require authentication using a Bearer token in the Authorization header:
-
-```
-Authorization: Bearer <access_token>
-```
-
 ### Register User
 
 **POST** `/api/auth/register`
@@ -26,6 +20,24 @@ Request body:
   "password": "string",
   "phone": "string",
   "user_role": "number"
+}
+```
+
+Response:
+
+```json
+{
+  "data": {
+    "id": 1,
+    "display_name": "John Doe",
+    "name": "John",
+    "email": "john@example.com",
+    "phone": "1234567890",
+    "user_role": 1,
+    "createdAt": "2023-01-01T00:00:00.000Z",
+    "updatedAt": "2023-01-01T00:00:00.000Z"
+  },
+  "status": 201
 }
 ```
 
@@ -47,11 +59,20 @@ Response:
 ```json
 {
   "data": {
-    "accessToken": "string",
-    "refreshToken": "string"
+    "user": {
+      "id": 1,
+      "display_name": "John Doe",
+      "name": "John",
+      "email": "john@example.com",
+      "phone": "1234567890",
+      "user_role": 1,
+      "createdAt": "2023-01-01T00:00:00.000Z",
+      "updatedAt": "2023-01-01T00:00:00.000Z"
+    },
+    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
   },
-  "status": 200,
-  "message": "Login successful"
+  "status": 201
 }
 ```
 
@@ -59,13 +80,22 @@ Response:
 
 **PUT** `/api/auth/refresh`
 
-🔒 **Requires Authentication**
-
 Request body:
 
 ```json
 {
   "refreshToken": "string"
+}
+```
+
+Response:
+
+```json
+{
+  "data": {
+    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  },
+  "status": 200
 }
 ```
 
@@ -73,8 +103,6 @@ Request body:
 
 **DELETE** `/api/auth/logout`
 
-🔒 **Requires Authentication**
-
 Request body:
 
 ```json
@@ -83,7 +111,16 @@ Request body:
 }
 ```
 
----
+Response:
+
+```json
+{
+  "data": {
+    "message": "Refresh token deleted successfully"
+  },
+  "status": 200
+}
+```
 
 ## Developer Journeys
 
@@ -91,13 +128,34 @@ Request body:
 
 **GET** `/api/journeys`
 
-No authentication required (public endpoint).
+Response:
+
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "name": "Frontend Developer",
+      "summary": "Learn frontend development",
+      "point": 100,
+      "required_point": 50,
+      "xp": 200,
+      "required_xp": 100,
+      "status": 1,
+      "listed": 1,
+      "dead_line": "2023-12-31T00:00:00.000Z",
+      "createdAt": "2023-01-01T00:00:00.000Z",
+      "updatedAt": "2023-01-01T00:00:00.000Z"
+    }
+  ],
+  "status": 200,
+  "message": "Retrieved successfully"
+}
+```
 
 ### Create Journey
 
 **POST** `/api/journeys`
-
-🔒 **Requires Authentication**
 
 Request body:
 
@@ -112,6 +170,29 @@ Request body:
   "status": "string",
   "listed": "boolean",
   "dead_line": "date"
+}
+```
+
+Response:
+
+```json
+{
+  "data": {
+    "id": 1,
+    "name": "Frontend Developer",
+    "summary": "Learn frontend development",
+    "point": 100,
+    "required_point": 50,
+    "xp": 200,
+    "required_xp": 100,
+    "status": 1,
+    "listed": 1,
+    "dead_line": "2023-12-31T00:00:00.000Z",
+    "createdAt": "2023-01-01T00:00:00.000Z",
+    "updatedAt": "2023-01-01T00:00:00.000Z"
+  },
+  "status": 201,
+  "message": "Created successfully"
 }
 ```
 
@@ -119,13 +200,32 @@ Request body:
 
 **GET** `/api/journeys/{id}`
 
-🔒 **Requires Authentication**
+Response:
+
+```json
+{
+  "data": {
+    "id": 1,
+    "name": "Frontend Developer",
+    "summary": "Learn frontend development",
+    "point": 100,
+    "required_point": 50,
+    "xp": 200,
+    "required_xp": 100,
+    "status": 1,
+    "listed": 1,
+    "dead_line": "2023-12-31T00:00:00.000Z",
+    "createdAt": "2023-01-01T00:00:00.000Z",
+    "updatedAt": "2023-01-01T00:00:00.000Z"
+  },
+  "status": 200,
+  "message": "Retrieved successfully"
+}
+```
 
 ### Update Journey
 
 **PUT** `/api/journeys/{id}`
-
-🔒 **Requires Authentication**
 
 Request body:
 
@@ -143,13 +243,55 @@ Request body:
 }
 ```
 
+Response:
+
+```json
+{
+  "data": {
+    "id": 1,
+    "name": "Frontend Developer",
+    "summary": "Learn frontend development",
+    "point": 100,
+    "required_point": 50,
+    "xp": 200,
+    "required_xp": 100,
+    "status": 1,
+    "listed": 1,
+    "dead_line": "2023-12-31T00:00:00.000Z",
+    "createdAt": "2023-01-01T00:00:00.000Z",
+    "updatedAt": "2023-01-01T00:00:00.000Z"
+  },
+  "status": 200,
+  "message": "Updated successfully"
+}
+```
+
 ### Delete Journey
 
 **DELETE** `/api/journeys/{id}`
 
-🔒 **Requires Authentication**
+Response:
 
----
+```json
+{
+  "data": {
+    "id": 1,
+    "name": "Frontend Developer",
+    "summary": "Learn frontend development",
+    "point": 100,
+    "required_point": 50,
+    "xp": 200,
+    "required_xp": 100,
+    "status": 1,
+    "listed": 1,
+    "dead_line": "2023-12-31T00:00:00.000Z",
+    "createdAt": "2023-01-01T00:00:00.000Z",
+    "updatedAt": "2023-01-01T00:00:00.000Z"
+  },
+  "status": 200,
+  "message": "Deleted successfully"
+}
+```
 
 ## Developer Journey Tutorials
 
@@ -157,28 +299,92 @@ Request body:
 
 **GET** `/api/journeys/{developerJourneyId}/tutorials`
 
-🔒 **Requires Authentication**
+Response:
 
-### Get Tutorial by ID
-
-**GET** `/api/journeys/{developerJourneyId}/tutorials/{tutorialId}`
-
-🔒 **Requires Authentication**
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "developer_journey_id": 1,
+      "title": "Introduction to HTML",
+      "position": 1,
+      "status": "published",
+      "created_at": "2023-01-01T00:00:00.000Z",
+      "updated_at": "2023-01-01T00:00:00.000Z",
+      "developer_journey_name": "Frontend Developer",
+      "developer_journey_summary": "Learn frontend development"
+    }
+  ],
+  "status": 200,
+  "message": "Data retrieved successfully"
+}
+```
 
 ### Create Tutorial
 
 **POST** `/api/journeys/{developerJourneyId}/tutorials`
-
-🔒 **Requires Authentication**
 
 Request body:
 
 ```json
 {
   "title": "string",
-  "content": "string",
-  "video_url": "string",
-  "duration": "number"
+  "position": "number",
+  "status": "string"
+}
+```
+
+Response:
+
+```json
+{
+  "data": {
+    "id": 1,
+    "developer_journey_id": 1,
+    "title": "Introduction to HTML",
+    "position": 1,
+    "status": "published",
+    "created_at": "2023-01-01T00:00:00.000Z",
+    "updated_at": "2023-01-01T00:00:00.000Z"
+  },
+  "status": 201,
+  "message": "Created successfully"
+}
+```
+
+### Get Tutorial by ID
+
+**GET** `/api/journeys/{developerJourneyId}/tutorials/{tutorialId}`
+
+Response:
+
+```json
+{
+  "data": {
+    "id": 1,
+    "developer_journey_id": 1,
+    "title": "Introduction to HTML",
+    "position": 1,
+    "status": "published",
+    "created_at": "2023-01-01T00:00:00.000Z",
+    "updated_at": "2023-01-01T00:00:00.000Z",
+    "developerJourney": {
+      "name": "Frontend Developer",
+      "summary": "Learn frontend development"
+    },
+    "questions": [
+      {
+        "id": 1,
+        "question_text": "What is HTML?",
+        "position": 1
+      }
+    ],
+    "developer_journey_name": "Frontend Developer",
+    "developer_journey_summary": "Learn frontend development"
+  },
+  "status": 200,
+  "message": "Data retrieved successfully"
 }
 ```
 
@@ -186,16 +392,35 @@ Request body:
 
 **PUT** `/api/journeys/{developerJourneyId}/tutorials/{tutorialId}`
 
-🔒 **Requires Authentication**
-
 Request body:
 
 ```json
 {
   "title": "string",
-  "content": "string",
-  "video_url": "string",
-  "duration": "number"
+  "position": "number",
+  "status": "string"
+}
+```
+
+Response:
+
+```json
+{
+  "data": {
+    "id": 1,
+    "developer_journey_id": 1,
+    "title": "Introduction to HTML",
+    "position": 1,
+    "status": "published",
+    "created_at": "2023-01-01T00:00:00.000Z",
+    "updated_at": "2023-01-01T00:00:00.000Z",
+    "developerJourney": {
+      "name": "Frontend Developer",
+      "summary": "Learn frontend development"
+    }
+  },
+  "status": 200,
+  "message": "Updated successfully"
 }
 ```
 
@@ -203,9 +428,23 @@ Request body:
 
 **DELETE** `/api/journeys/{developerJourneyId}/tutorials/{tutorialId}`
 
-🔒 **Requires Authentication**
+Response:
 
----
+```json
+{
+  "data": {
+    "id": 1,
+    "developer_journey_id": 1,
+    "title": "Introduction to HTML",
+    "position": 1,
+    "status": "published",
+    "created_at": "2023-01-01T00:00:00.000Z",
+    "updated_at": "2023-01-01T00:00:00.000Z"
+  },
+  "status": 200,
+  "message": "Deleted successfully"
+}
+```
 
 ## Tutorial Questions
 
@@ -213,19 +452,28 @@ Request body:
 
 **GET** `/api/tutorials/{tutorialId}/questions`
 
-🔒 **Requires Authentication**
+Response:
 
-### Get Question by ID
-
-**GET** `/api/tutorials/{tutorialId}/questions/{questionId}`
-
-🔒 **Requires Authentication**
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "tutorial_id": 1,
+      "question_text": "What is HTML?",
+      "position": 1,
+      "created_at": "2023-01-01T00:00:00.000Z",
+      "updated_at": "2023-01-01T00:00:00.000Z"
+    }
+  ],
+  "status": 200,
+  "message": "Data retrieved successfully"
+}
+```
 
 ### Create Question
 
 **POST** `/api/tutorials/{tutorialId}/questions`
-
-🔒 **Requires Authentication**
 
 Request body:
 
@@ -233,6 +481,50 @@ Request body:
 {
   "question_text": "string",
   "position": "number"
+}
+```
+
+Response:
+
+```json
+{
+  "data": {
+    "id": 1,
+    "tutorial_id": 1,
+    "question_text": "What is HTML?",
+    "position": 1,
+    "created_at": "2023-01-01T00:00:00.000Z",
+    "updated_at": "2023-01-01T00:00:00.000Z"
+  },
+  "status": 201,
+  "message": "Data created successfully"
+}
+```
+
+### Get Question by ID
+
+**GET** `/api/tutorials/{tutorialId}/questions/{questionId}`
+
+Response:
+
+```json
+{
+  "data": {
+    "id": 1,
+    "tutorial_id": 1,
+    "question_text": "What is HTML?",
+    "position": 1,
+    "created_at": "2023-01-01T00:00:00.000Z",
+    "updated_at": "2023-01-01T00:00:00.000Z",
+    "options": [
+      {
+        "option_label": "A",
+        "option_text": "Hyper Text Markup Language"
+      }
+    ]
+  },
+  "status": 200,
+  "message": "Data retrieved successfully"
 }
 ```
 
@@ -240,8 +532,6 @@ Request body:
 
 **PUT** `/api/tutorials/{tutorialId}/questions/{questionId}`
 
-🔒 **Requires Authentication**
-
 Request body:
 
 ```json
@@ -251,41 +541,117 @@ Request body:
 }
 ```
 
+Response:
+
+```json
+{
+  "data": {
+    "id": 1,
+    "tutorial_id": 1,
+    "question_text": "What is HTML?",
+    "position": 1,
+    "created_at": "2023-01-01T00:00:00.000Z",
+    "updated_at": "2023-01-01T00:00:00.000Z"
+  },
+  "status": 200,
+  "message": "Data updated successfully"
+}
+```
+
 ### Delete Question
 
 **DELETE** `/api/tutorials/{tutorialId}/questions/{questionId}`
 
-🔒 **Requires Authentication**
+Response:
 
----
+```json
+{
+  "data": {
+    "id": 1,
+    "tutorial_id": 1,
+    "question_text": "What is HTML?",
+    "position": 1,
+    "created_at": "2023-01-01T00:00:00.000Z",
+    "updated_at": "2023-01-01T00:00:00.000Z"
+  },
+  "status": 200,
+  "message": "Data deleted successfully"
+}
+```
 
-## Tutorial Questions Options
+## Tutorial Question Options
 
 ### Get All Options for a Question
 
 **GET** `/api/questions/{questionId}/options`
 
-🔒 **Requires Authentication**
+Response:
 
-### Get Option by ID
-
-**GET** `/api/questions/{questionId}/options/{optionId}`
-
-🔒 **Requires Authentication**
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "question_id": 1,
+      "option_label": "A",
+      "option_text": "Hyper Text Markup Language",
+      "created_at": "2023-01-01T00:00:00.000Z",
+      "updated_at": "2023-01-01T00:00:00.000Z"
+    }
+  ],
+  "status": 200,
+  "message": "Retrieved successfully"
+}
+```
 
 ### Create Option
 
 **POST** `/api/questions/{questionId}/options`
-
-🔒 **Requires Authentication**
 
 Request body:
 
 ```json
 {
   "option_label": "string",
-  "option_text": "string",
-  "is_correct": "boolean"
+  "option_text": "string"
+}
+```
+
+Response:
+
+```json
+{
+  "data": {
+    "id": 1,
+    "question_id": 1,
+    "option_label": "A",
+    "option_text": "Hyper Text Markup Language",
+    "created_at": "2023-01-01T00:00:00.000Z",
+    "updated_at": "2023-01-01T00:00:00.000Z"
+  },
+  "status": 201,
+  "message": "Created successfully"
+}
+```
+
+### Get Option by ID
+
+**GET** `/api/questions/{questionId}/options/{optionId}`
+
+Response:
+
+```json
+{
+  "data": {
+    "id": 1,
+    "question_id": 1,
+    "option_label": "A",
+    "option_text": "Hyper Text Markup Language",
+    "created_at": "2023-01-01T00:00:00.000Z",
+    "updated_at": "2023-01-01T00:00:00.000Z"
+  },
+  "status": 200,
+  "message": "Retrieved successfully"
 }
 ```
 
@@ -293,14 +659,28 @@ Request body:
 
 **PUT** `/api/questions/{questionId}/options/{optionId}`
 
-🔒 **Requires Authentication**
-
 Request body:
 
 ```json
 {
-  "option_text": "string",
-  "is_correct": "boolean"
+  "option_text": "string"
+}
+```
+
+Response:
+
+```json
+{
+  "data": {
+    "id": 1,
+    "question_id": 1,
+    "option_label": "A",
+    "option_text": "Hyper Text Markup Language",
+    "created_at": "2023-01-01T00:00:00.000Z",
+    "updated_at": "2023-01-01T00:00:00.000Z"
+  },
+  "status": 200,
+  "message": "Updated successfully"
 }
 ```
 
@@ -308,9 +688,22 @@ Request body:
 
 **DELETE** `/api/questions/{questionId}/options/{optionId}`
 
-🔒 **Requires Authentication**
+Response:
 
----
+```json
+{
+  "data": {
+    "id": 1,
+    "question_id": 1,
+    "option_label": "A",
+    "option_text": "Hyper Text Markup Language",
+    "created_at": "2023-01-01T00:00:00.000Z",
+    "updated_at": "2023-01-01T00:00:00.000Z"
+  },
+  "status": 200,
+  "message": "Deleted successfully"
+}
+```
 
 ## Exam Registrations
 
@@ -318,32 +711,41 @@ Request body:
 
 **GET** `/api/tutorials/{tutorialId}/exams`
 
-🔒 **Requires Authentication**
+Response:
 
-Returns all exam registrations for the specified tutorial.
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "tutorial_id": 1,
+      "examinees_id": 1,
+      "status": "ongoing",
+      "deadline_at": "2023-01-01T00:30:00.000Z",
+      "created_at": "2023-01-01T00:00:00.000Z",
+      "updated_at": "2023-01-01T00:00:00.000Z"
+    }
+  ],
+  "status": 200,
+  "message": "Retrieved successfully"
+}
+```
 
 ### Register/Start a New Exam
 
 **POST** `/api/tutorials/{tutorialId}/exams/register`
-
-🔒 **Requires Authentication**
-
-Starts a new exam session for the authenticated user. Creates a new exam registration with:
-
-- Status: `ongoing`
-- Deadline: 30 minutes from start time
 
 Response:
 
 ```json
 {
   "data": {
-    "id": "number",
-    "tutorial_id": "number",
-    "examinees_id": "number",
+    "id": 1,
+    "tutorial_id": 1,
+    "examinees_id": 1,
     "status": "ongoing",
-    "deadline_at": "datetime",
-    "created_at": "datetime"
+    "deadline_at": "2023-01-01T00:30:00.000Z",
+    "created_at": "2023-01-01T00:00:00.000Z"
   },
   "status": 201,
   "message": "Exam Started"
@@ -354,22 +756,18 @@ Response:
 
 **POST** `/api/exams/{examId}/answers/bulk`
 
-🔒 **Requires Authentication**
-
-Submit multiple answers for an exam. Supports both creating new answers and updating existing ones.
-
 Request body:
 
 ```json
 {
   "answers": [
     {
-      "question_id": "number",
-      "option_id": "number"
+      "question_id": 1,
+      "option_id": 1
     },
     {
-      "question_id": "number",
-      "option_id": "number"
+      "question_id": 2,
+      "option_id": 5
     }
   ]
 }
@@ -381,12 +779,12 @@ Response:
 {
   "data": [
     {
-      "id": "number",
-      "exam_registration_id": "number",
-      "question_id": "number",
-      "option_id": "number",
-      "is_correct": "boolean",
-      "created_at": "datetime"
+      "id": 1,
+      "exam_registration_id": 1,
+      "question_id": 1,
+      "option_id": 1,
+      "is_correct": true,
+      "created_at": "2023-01-01T00:00:00.000Z"
     }
   ],
   "status": 201,
@@ -398,44 +796,24 @@ Response:
 
 **POST** `/api/exams/{examId}/finish`
 
-🔒 **Requires Authentication**
-
-Finishes the exam and calculates the final score. Updates exam status to `finished` and creates an exam result.
-
 Response:
 
 ```json
 {
   "data": {
-    "id": "number",
-    "exam_registration_id": "number",
-    "total_questions": "number",
-    "score": "number",
-    "is_passed": "boolean",
-    "created_at": "datetime"
+    "id": 1,
+    "exam_registration_id": 1,
+    "total_questions": 10,
+    "score": 80,
+    "is_passed": true,
+    "created_at": "2023-01-01T00:00:00.000Z"
   },
   "status": 200,
   "message": "Exam Finished"
 }
 ```
 
-**Note:** Passing score is 70 or higher.
-
----
-
-## Response Format
-
-### Success Response
-
-```json
-{
-  "data": {},
-  "status": "number",
-  "message": "string"
-}
-```
-
-### Error Response
+All error responses follow this format:
 
 ```json
 {
@@ -446,20 +824,11 @@ Response:
 }
 ```
 
-### Common HTTP Status Codes
+Common HTTP status codes:
 
-- `200` - Success
-- `201` - Created
-- `400` - Bad Request
-- `401` - Unauthorized
-- `404` - Not Found
-- `500` - Internal Server Error
-
----
-
-## Notes
-
-- All timestamps are in ISO 8601 format
-- All endpoints marked with 🔒 require a valid JWT access token
-- Exam duration is 30 minutes from start time
-- Minimum passing score for exams is 70%
+- 200: Success
+- 201: Created
+- 400: Bad Request
+- 401: Unauthorized
+- 404: Not Found
+- 500: Internal Server Error
