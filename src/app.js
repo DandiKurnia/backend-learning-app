@@ -13,6 +13,8 @@ const developerJourneyTutorials = require('./api/developer_journey_tutorials/rou
 const developerJourneyTutorialQuestions = require('./api/developer_journey_tutorial_questions/router');
 const tutorialQuestionsOptions = require('./api/tutorial_questions_options/router');
 const examRegistrations = require('./api/exam_registrations/router');
+const developerJourneyCompletions = require('./api/developer_journey_completions/router');
+
 
 
 
@@ -35,6 +37,7 @@ app.use(api, developerJourneyTutorials);
 app.use(api, developerJourneyTutorialQuestions);
 app.use(api, tutorialQuestionsOptions);
 app.use(api, examRegistrations);
+app.use(api, developerJourneyCompletions);
 
 // 404 middleware should be placed after routes
 app.use(notFoundMiddleware);
