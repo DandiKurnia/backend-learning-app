@@ -508,6 +508,40 @@ Response:
 }
 ```
 
+## Developer Journey Completions
+
+### Record Study Duration
+
+**POST** `/api/journeys/{journeyId}/study-duration`
+
+Request body:
+
+```json
+{
+  "duration": "number" // Durasi belajar dalam detik
+}
+```
+
+Response:
+
+```json
+{
+  "data": {
+    "id": 1,
+    "user_id": 1,
+    "journey_id": 1,
+    "study_duration": 3600, // 1 jam dalam detik
+    "enrolling_times": 5,
+    "enrollments_at": "2023-01-01T00:00:00.000Z",
+    "last_enrolled_at": "2023-01-01T01:00:00.000Z",
+    "created_at": "2023-01-01T00:00:00.000Z",
+    "updated_at": "2023-01-01T01:00:00.000Z"
+  },
+  "status": 201,
+  "message": "Created successfully"
+}
+```
+
 All error responses follow this format:
 
 ```json
