@@ -1,10 +1,11 @@
 const BadRequestError = require('../errors/bad-request');
 
 const validate = (schema) => (req, res, next) => {
-  const { error } = schema.validate(req.body);
+  const { error } = schema.validate(req.body, { abortEarly: false });
 
   if (error) {
-    throw new BadRequestError("Invalid request payload");
+    const errorMessage = error.details.map(detail => detail.message).join(', ');
+    throw new BadRequestError(errorMessage);
   }
 
   next();
