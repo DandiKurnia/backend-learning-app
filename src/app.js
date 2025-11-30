@@ -1,13 +1,19 @@
 const express = require('express');
 const dotenv = require('dotenv');
+const cors = require('cors');
 
 dotenv.config();
 const app = express();
 
 // Middleware
 app.use(express.json());
+app.use(cors({
+    origin: "*",
+    methods: "GET,POST,PUT,DELETE",
+    allowedHeaders: "Content-Type, Authorization"
+}));
 
-const developerJourney = require('./api/developer_journeys/router');    
+const developerJourney = require('./api/developer_journeys/router');
 const users = require('./api/users/router');
 const developerJourneyTutorials = require('./api/developer_journey_tutorials/router');
 const developerJourneyTutorialQuestions = require('./api/developer_journey_tutorial_questions/router');
@@ -32,7 +38,7 @@ app.get('/', (req, res) => {
 });
 
 app.use(api, developerJourney);
-app.use(api , users);
+app.use(api, users);
 app.use(api, developerJourneyTutorials);
 app.use(api, developerJourneyTutorialQuestions);
 app.use(api, tutorialQuestionsOptions);
