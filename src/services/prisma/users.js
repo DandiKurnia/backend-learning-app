@@ -7,8 +7,8 @@ const prisma = new PrismaClient();
 
 const generateAccessToken = (user) => {
     return jwt.sign(
-        { 
-            userId: user.id, 
+        {
+            userId: user.id,
             email: user.email,
             displayName: user.display_name
         },
@@ -19,8 +19,8 @@ const generateAccessToken = (user) => {
 
 const generateRefreshToken = (user) => {
     return jwt.sign(
-        { 
-            userId: user.id, 
+        {
+            userId: user.id,
             email: user.email
         },
         process.env.REFRESH_TOKEN_SECRET || 'fallback_refresh_secret_key',
@@ -31,17 +31,25 @@ const generateRefreshToken = (user) => {
 const registerUser = async (req) => {
     try {
         const { display_name, name, email, password, phone, user_role } = req.body;
-        
-        const existingUser = await prisma.user.findUnique({
+
+        const existingEmailUser = await prisma.user.findUnique({
             where: { email }
         });
-        
-        if (existingUser) {
+
+        if (existingEmailUser) {
             throw new BadRequestError('User with this email already exists');
         }
 
+        const existingDisplayNameUser = await prisma.user.findUnique({
+            where: { display_name }
+        });
+
+        if (existingDisplayNameUser) {
+            throw new BadRequestError('User with this display name already exists');
+        }
+
         const hashedPassword = await bcrypt.hash(password, 10);
-        
+
         const user = await prisma.user.create({
             data: {
                 display_name,
@@ -52,7 +60,7 @@ const registerUser = async (req) => {
                 user_role: parseInt(user_role)
             }
         });
-        
+
         return {
             id: user.id,
             display_name: user.display_name,
@@ -190,4 +198,4 @@ const deleteRefreshToken = async (req) => {
 
 
 module.exports = { registerUser, loginUser, refreshAccessToken, deleteRefreshToken };
-    
+
