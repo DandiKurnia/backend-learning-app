@@ -2,7 +2,7 @@
 
 API documentation for the Backend Learning App.
 
-Base URL: `https://api.danbildad.my.id`
+Base URL: `api.teamcs222.my.id`
 
 ## Authentication
 
