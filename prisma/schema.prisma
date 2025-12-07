@@ -45,6 +45,7 @@ model DeveloperJourney {
   required_xp    Int      @default(0)
   status         Int      @default(0)
   listed         Int      @default(0)
+  duration       Int      @default(0)
   dead_line      DateTime
   createdAt      DateTime @default(now())
   updatedAt      DateTime @default(now())
@@ -154,7 +155,8 @@ model DeveloperJourneyCompletion {
   study_duration        Int       @default(0)
   avg_submission_rating Float?    @default(0)
 
-  // RELATIONS
   user    User             @relation(fields: [user_id], references: [id])
   journey DeveloperJourney @relation(fields: [journey_id], references: [id])
 }
+
+
