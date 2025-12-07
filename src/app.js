@@ -2,7 +2,9 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 
+// Load environment variables
 dotenv.config();
+
 const app = express();
 
 // Middleware
@@ -13,6 +15,7 @@ app.use(cors({
     allowedHeaders: "Content-Type, Authorization"
 }));
 
+// Import API routes
 const developerJourney = require('./api/developer_journeys/router');
 const users = require('./api/users/router');
 const developerJourneyTutorials = require('./api/developer_journey_tutorials/router');
@@ -20,6 +23,10 @@ const developerJourneyTutorialQuestions = require('./api/developer_journey_tutor
 const tutorialQuestionsOptions = require('./api/tutorial_questions_options/router');
 const examRegistrations = require('./api/exam_registrations/router');
 const developerJourneyCompletions = require('./api/developer_journey_completions/router');
+const userLearningStyles = require('./api/user_learning_styles/router');
+
+// Import cron jobs
+const { startLearningStyleCron } = require('./cron/learning_style_cron');
 
 
 
@@ -44,6 +51,7 @@ app.use(api, developerJourneyTutorialQuestions);
 app.use(api, tutorialQuestionsOptions);
 app.use(api, examRegistrations);
 app.use(api, developerJourneyCompletions);
+app.use(api, userLearningStyles);
 
 // 404 middleware should be placed after routes
 app.use(notFoundMiddleware);
@@ -56,4 +64,7 @@ const Port = process.env.PORT || 3000;
 
 app.listen(Port, () => {
     console.log(`Server is running on port ${Port}`);
+
+    // Start cron jobs
+    startLearningStyleCron();
 });

@@ -60,6 +60,97 @@ Request body:
 }
 ```
 
+## Learning Style Analysis
+
+### Get My Learning Style
+
+**GET** `/api/my-learning-style?period=YYYY-MM`
+
+Get the learning style analysis for the authenticated user for a specific period.
+
+Query Parameters:
+
+- `period` (optional): The period in format YYYY-MM. If not provided, returns the most recent analysis.
+
+Response:
+
+```json
+{
+  "data": {
+    "id": 1,
+    "user_id": 1,
+    "period": "2025-11-01T00:00:00.000Z",
+    "learning_style": "Fast Learner",
+    "description": "Berdasarkan aktivitas belajar Anda selama periode 2025-11...",
+    "recommendations": [
+      "Cobalah untuk meningkatkan durasi belajar harian Anda",
+      "Fokuslah pada modul-modul yang belum sepenuhnya Anda kuasai"
+    ],
+    "avg_completion_ratio": 0.85,
+    "created_at": "2025-12-01T02:00:00.000Z"
+  },
+  "status": 200,
+  "message": "Learning style retrieved successfully"
+}
+```
+
+### Get My Latest Learning Style
+
+**GET** `/api/my-latest-learning-style`
+
+Get the most recent learning style analysis for the authenticated user.
+
+Response:
+
+```json
+{
+  "data": {
+    "id": 1,
+    "user_id": 1,
+    "period": "2025-11-01T00:00:00.000Z",
+    "learning_style": "Fast Learner",
+    "description": "Berdasarkan aktivitas belajar Anda selama periode 2025-11...",
+    "recommendations": [
+      "Cobalah untuk meningkatkan durasi belajar harian Anda",
+      "Fokuslah pada modul-modul yang belum sepenuhnya Anda kuasai"
+    ],
+    "avg_completion_ratio": 0.85,
+    "created_at": "2025-12-01T02:00:00.000Z"
+  },
+  "status": 200,
+  "message": "Latest learning style retrieved successfully"
+}
+```
+
+### Process Learning Style (Manual Trigger)
+
+**POST** `/api/process-learning-style`
+
+Manually trigger the learning style analysis process for a specific period.
+
+Request body:
+
+```json
+{
+  "period": "2025-11" // Format: YYYY-MM
+}
+```
+
+Response:
+
+```json
+{
+  "data": {
+    "processedUsers": 45,
+    "period": "2025-11",
+    "status": "success",
+    "message": "Processed 45 users"
+  },
+  "status": 200,
+  "message": "Learning style processing completed"
+}
+```
+
 ## Developer Journeys
 
 ### Get All Journeys
@@ -561,3 +652,67 @@ Common HTTP status codes:
 - 401: Unauthorized
 - 404: Not Found
 - 500: Internal Server Error
+
+## Learning Style Analysis System
+
+The learning style analysis system periodically analyzes user learning patterns using machine learning to provide personalized learning recommendations.
+
+### How It Works
+
+1. **Data Collection**: The system collects learning activity data including:
+
+   - Module completion rates
+   - Study duration patterns
+   - Submission ratings
+   - Engagement metrics
+
+2. **Monthly Processing**: Every 1st of the month at 2:00 AM, the system:
+
+   - Aggregates the previous month's learning data
+   - Sends the data to the ML service for analysis
+   - Stores the results in the UserLearningStyle table
+
+3. **Personalized Recommendations**: Based on the analysis, users receive:
+   - Learning style classification (Fast Learner / Reflective / Consistent)
+   - Detailed description of their learning patterns
+   - Personalized recommendations for improvement
+
+### Available Learning Styles
+
+1. **Fast Learner**: Users who quickly grasp new concepts and complete modules rapidly
+2. **Reflective**: Users who take time to deeply understand concepts before moving forward
+3. **Consistent**: Users who maintain steady progress and regular study habits
+
+### API Endpoints
+
+All learning style endpoints require authentication with a valid JWT token.
+
+#### For Regular Users:
+
+- `GET /api/my-learning-style` - Get your learning style for a specific period
+- `GET /api/my-latest-learning-style` - Get your most recent learning style analysis
+- `POST /api/process-learning-style` - Manually trigger analysis (admin only)
+
+#### For Admin Users:
+
+- `GET /api/user-learning-style/:userId` - Get learning style for a specific user
+- `GET /api/user-learning-style/latest/:userId` - Get latest learning style for a specific user
+- `GET /api/user-learning-styles?period=YYYY-MM` - Get all learning styles for a period
+
+### Data Model
+
+The system stores learning style analysis results in the `UserLearningStyle` table with the following fields:
+
+- `user_id`: Reference to the user
+- `period`: The analysis period (first day of the month)
+- `learning_style`: Classification of learning style
+- `description`: Detailed explanation of the learning style
+- `recommendations`: JSON array of personalized recommendations
+- `avg_completion_ratio`: Mathematical basis for the prediction
+- `created_at`: Timestamp of when the analysis was completed
+
+### Privacy and Security
+
+- All learning data is anonymized before being sent to the ML service
+- Results are only accessible to the authenticated user or administrators
+- Data is retained indefinitely to track learning progress over time
