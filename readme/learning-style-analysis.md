@@ -52,7 +52,7 @@ Berjalan otomatis setiap tanggal 1 pukul 02:00 pagi untuk memproses data gaya be
    - `module_count`: Jumlah modul yang diikuti
    - `total_study_duration`: Total durasi belajar
    - `avg_study_per_module`: Rata-rata durasi belajar per modul
-   - `avg_completion_ratio`: Rasio penyelesaian rata-rata
+   - `avg_completion_ratio`: Rasio penyelesaian rata-rata (dihitung berdasarkan durasi belajar dibagi durasi yang direncanakan per modul)
    - `avg_submission_rating`: Rating rata-rata pengumpulan tugas
 3. Mengirim data agregasi ke Flask API
 4. Menerima hasil prediksi dari ML service

@@ -653,66 +653,69 @@ Common HTTP status codes:
 - 404: Not Found
 - 500: Internal Server Error
 
-## Learning Style Analysis System
+## Sistem Analisis Gaya Belajar
 
-The learning style analysis system periodically analyzes user learning patterns using machine learning to provide personalized learning recommendations.
+Sistem analisis gaya belajar secara berkala menganalisis pola pembelajaran pengguna menggunakan machine learning untuk memberikan rekomendasi pembelajaran yang dipersonalisasi.
 
-### How It Works
+Untuk dokumentasi yang lebih lengkap, silakan lihat [learning-style-analysis.md](readme/learning-style-analysis.md)
 
-1. **Data Collection**: The system collects learning activity data including:
+### Cara Kerja
 
-   - Module completion rates
-   - Study duration patterns
-   - Submission ratings
-   - Engagement metrics
+1. **Pengumpulan Data**: Sistem mengumpulkan data aktivitas pembelajaran termasuk:
 
-2. **Monthly Processing**: Every 1st of the month at 2:00 AM, the system:
+   - Tingkat penyelesaian modul
+   - Pola durasi belajar
+   - Rating pengumpulan tugas
+   - Metrik keterlibatan
 
-   - Aggregates the previous month's learning data
-   - Sends the data to the ML service for analysis
-   - Stores the results in the UserLearningStyle table
+2. **Pemrosesan Bulanan**: Setiap tanggal 1 pukul 02.00 pagi, sistem:
 
-3. **Personalized Recommendations**: Based on the analysis, users receive:
-   - Learning style classification (Fast Learner / Reflective / Consistent)
-   - Detailed description of their learning patterns
-   - Personalized recommendations for improvement
+   - Mengumpulkan data pembelajaran bulan sebelumnya
+   - Mengirim data ke layanan ML untuk analisis
+   - Menyimpan hasil di tabel UserLearningStyle
 
-### Available Learning Styles
+3. **Rekomendasi Dipersonalisasi**: Berdasarkan analisis, pengguna menerima:
 
-1. **Fast Learner**: Users who quickly grasp new concepts and complete modules rapidly
-2. **Reflective**: Users who take time to deeply understand concepts before moving forward
-3. **Consistent**: Users who maintain steady progress and regular study habits
+   - Klasifikasi gaya belajar (Fast Learner / Reflective / Consistent)
+   - Deskripsi terperinci tentang pola pembelajaran mereka
+   - Rekomendasi yang dipersonalisasi untuk perbaikan
 
-### API Endpoints
+### Gaya Belajar yang Tersedia
 
-All learning style endpoints require authentication with a valid JWT token.
+1. **Fast Learner**: Pengguna yang cepat memahami konsep baru dan menyelesaikan modul dengan cepat
+2. **Reflective**: Pengguna yang membutuhkan waktu untuk memahami konsep secara mendalam sebelum melanjutkan
+3. **Consistent**: Pengguna yang menjaga kemajuan yang stabil dan kebiasaan belajar teratur
 
-#### For Regular Users:
+### Endpoint API
 
-- `GET /api/my-learning-style` - Get your learning style for a specific period
-- `GET /api/my-latest-learning-style` - Get your most recent learning style analysis
-- `POST /api/process-learning-style` - Manually trigger analysis (admin only)
+Semua endpoint gaya belajar memerlukan autentikasi dengan token JWT yang valid.
 
-#### For Admin Users:
+#### Untuk Pengguna Reguler:
 
-- `GET /api/user-learning-style/:userId` - Get learning style for a specific user
-- `GET /api/user-learning-style/latest/:userId` - Get latest learning style for a specific user
-- `GET /api/user-learning-styles?period=YYYY-MM` - Get all learning styles for a period
+- `GET /api/my-learning-style` - Mendapatkan gaya belajar Anda untuk periode tertentu
+- `GET /api/my-latest-learning-style` - Mendapatkan analisis gaya belajar terbaru Anda
+- `POST /api/process-learning-style` - Memicu analisis secara manual (khusus admin)
 
-### Data Model
+#### Untuk Pengguna Admin:
 
-The system stores learning style analysis results in the `UserLearningStyle` table with the following fields:
+- `GET /api/user-learning-style/:userId` - Mendapatkan gaya belajar untuk pengguna tertentu
+- `GET /api/user-learning-style/latest/:userId` - Mendapatkan gaya belajar terbaru untuk pengguna tertentu
+- `GET /api/user-learning-styles?period=YYYY-MM` - Mendapatkan semua gaya belajar untuk suatu periode
 
-- `user_id`: Reference to the user
-- `period`: The analysis period (first day of the month)
-- `learning_style`: Classification of learning style
-- `description`: Detailed explanation of the learning style
-- `recommendations`: JSON array of personalized recommendations
-- `avg_completion_ratio`: Mathematical basis for the prediction
-- `created_at`: Timestamp of when the analysis was completed
+### Model Data
 
-### Privacy and Security
+Sistem menyimpan hasil analisis gaya belajar di tabel `UserLearningStyle` dengan field-field berikut:
 
-- All learning data is anonymized before being sent to the ML service
-- Results are only accessible to the authenticated user or administrators
-- Data is retained indefinitely to track learning progress over time
+- `user_id`: Referensi ke pengguna
+- `period`: Periode analisis (tanggal 1 bulan tersebut)
+- `learning_style`: Klasifikasi gaya belajar
+- `description`: Penjelasan terperinci tentang gaya belajar
+- `recommendations`: Array JSON dari rekomendasi yang dipersonalisasi
+- `avg_completion_ratio`: Dasar matematis untuk prediksi
+- `created_at`: Timestamp kapan analisis diselesaikan
+
+### Privasi dan Keamanan
+
+- Semua data pembelajaran dianonimkan sebelum dikirim ke layanan ML
+- Hasil hanya dapat diakses oleh pengguna yang terautentikasi atau administrator
+- Data disimpan secara permanen untuk melacak kemajuan pembelajaran dari waktu ke waktu
