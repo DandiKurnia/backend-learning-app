@@ -19,14 +19,14 @@ Service untuk mengelola pelacakan durasi belajar dan penyelesaian perjalanan pen
 - `req` (Request) - Express request object dengan:
   - `params.journeyId` (number) - ID perjalanan pengembang
   - `user.userId` (number) - ID user yang sedang login
-  - `body.duration` (number) - Durasi belajar dalam satuan detik
+  - `body.duration` (number) - Durasi belajar dalam satuan menit
 
 **Returns:** Object developer journey completion
 
 - `id`: ID record completion
 - `user_id`: ID user
 - `journey_id`: ID perjalanan
-- `study_duration`: Total durasi belajar dalam detik
+- `study_duration`: Total durasi belajar dalam menit
 - `enrolling_times`: Jumlah kali user mencatat durasi
 - `enrollments_at`: Waktu pertama kali user mencatat durasi
 - `last_enrolled_at`: Waktu terakhir user mencatat durasi
@@ -40,13 +40,13 @@ Service untuk mengelola pelacakan durasi belajar dan penyelesaian perjalanan pen
 
 ```javascript
 // POST /api/journeys/5/study-duration
-// Request body: { "duration": 180 }
+// Request body: { "duration": 30 }
 const completion = await createStudyDuration(req);
 // completion = {
 //   id: 10,
 //   user_id: 101,
 //   journey_id: 5,
-//   study_duration: 360, // 6 menit total (180 detik baru + 180 detik sebelumnya)
+//   study_duration: 60, // 60 menit total (30 menit baru + 30 menit sebelumnya)
 //   enrolling_times: 2,
 //   enrollments_at: "2023-01-01T10:00:00.000Z",
 //   last_enrolled_at: "2023-01-01T10:30:00.000Z"
@@ -76,7 +76,7 @@ const completion = await createStudyDuration(req);
 
 ## Notes untuk Frontend
 
-1. **Durasi:** Kirim durasi dalam satuan detik
+1. **Durasi:** Kirim durasi dalam satuan menit
 2. **Akumulasi:** Durasi akan terus terakumulasi setiap kali user mengirim durasi
 3. **Timestamp:** Gunakan `last_enrolled_at` untuk mengetahui kapan terakhir user belajar
 4. **Progress Tracking:** Gunakan `study_duration` untuk menampilkan progress belajar user
@@ -86,6 +86,6 @@ const completion = await createStudyDuration(req);
 
 ## API Endpoints
 
-| Method | Endpoint                                | Function            | Auth |
-| ------ | --------------------------------------- | ------------------- | ---- |
+| Method | Endpoint                                  | Function              | Auth |
+| ------ | ----------------------------------------- | --------------------- | ---- |
 | POST   | `/api/journeys/:journeyId/study-duration` | `createStudyDuration` | ✅   |

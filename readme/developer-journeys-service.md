@@ -2,7 +2,7 @@
 
 ## Overview
 
-Service untuk mengelola learning journey/path yang tersedia.
+Service untuk mengelola perjalanan pengembang (Developer Journeys) termasuk durasi yang direncanakan untuk setiap perjalanan.
 
 **Service File:** `src/services/prisma/developer_journeys.js`
 
@@ -10,124 +10,111 @@ Service untuk mengelola learning journey/path yang tersedia.
 
 ## Functions
 
-### 1. `getAllDeveloperJourneysService()`
+### 1. `createJourney(req)`
 
-**Deskripsi:** Mendapatkan semua developer journeys yang tersedia.
-
-**Parameters:** None
-
-**Returns:** Array of journey objects
-
-**Example:**
-
-```javascript
-const journeys = await getAllDeveloperJourneysService();
-// [{ id: 1, name: "Backend Developer", summary: "...", ... }]
-```
-
----
-
-### 2. `getDeveloperJourneyByIdService(id)`
-
-**Deskripsi:** Mendapatkan detail journey berdasarkan ID.
+**Deskripsi:** Membuat perjalanan pengembang baru dengan durasi yang direncanakan.
 
 **Parameters:**
 
-- `id` (number) - ID journey
+- `req` (Request) - Express request object dengan:
+  - `body.name` (string) - Nama perjalanan
+  - `body.summary` (string) - Ringkasan perjalanan
+  - `body.point` (number) - Poin perjalanan
+  - `body.required_point` (number) - Poin yang dibutuhkan
+  - `body.xp` (number) - XP perjalanan
+  - `body.required_xp` (number) - XP yang dibutuhkan
+  - `body.status` (number) - Status perjalanan
+  - `body.listed` (number) - Status publikasi
+  - `body.duration` (number) - Durasi yang direncanakan dalam JAM (akan dikonversi ke menit)
+  - `body.dead_line` (date) - Tanggal tenggat waktu
 
-**Returns:** Object journey
+**Returns:** Object developer journey
 
-**Throws:**
+### 2. `updateJourney(req)`
 
-- `NotFoundError` - Jika journey tidak ditemukan
-
-**Example:**
-
-```javascript
-const journey = await getDeveloperJourneyByIdService(1);
-```
-
----
-
-### 3. `createDeveloperJourneyService(data)`
-
-**Deskripsi:** Membuat journey baru (Admin only).
+**Deskripsi:** Memperbarui perjalanan pengembang yang sudah ada termasuk durasi yang direncanakan.
 
 **Parameters:**
 
-- `data` (Object):
-  - `name` (string) - Nama journey
-  - `summary` (string) - Deskripsi journey
-  - `point` (number) - Point yang diberikan
-  - `required_point` (number) - Point yang dibutuhkan untuk unlock
-  - `xp` (number) - XP yang diberikan
-  - `required_xp` (number) - XP yang dibutuhkan untuk unlock
-  - `status` (string) - Status journey (active/inactive)
-  - `listed` (boolean) - Apakah ditampilkan di list
-  - `dead_line` (date) - Deadline journey (optional)
+- `req` (Request) - Express request object dengan:
+  - `params.id` (number) - ID perjalanan yang akan diperbarui
+  - `body.name` (string) - Nama perjalanan
+  - `body.summary` (string) - Ringkasan perjalanan
+  - `body.point` (number) - Poin perjalanan
+  - `body.required_point` (number) - Poin yang dibutuhkan
+  - `body.xp` (number) - XP perjalanan
+  - `body.required_xp` (number) - XP yang dibutuhkan
+  - `body.status` (number) - Status perjalanan
+  - `body.listed` (number) - Status publikasi
+  - `body.duration` (number) - Durasi yang direncanakan dalam JAM (akan dikonversi ke menit)
+  - `body.dead_line` (date) - Tanggal tenggat waktu
 
-**Returns:** Object journey yang baru dibuat
+**Returns:** Object developer journey
 
-**Example:**
+### 3. `getAllJourneys()`
 
-```javascript
-const journeyData = {
-  name: "Frontend Developer",
-  summary: "Learn modern frontend development",
-  point: 100,
-  required_point: 0,
-  xp: 500,
-  required_xp: 0,
-  status: "active",
-  listed: true,
-  dead_line: new Date("2025-12-31"),
-};
-const newJourney = await createDeveloperJourneyService(journeyData);
-```
+**Deskripsi:** Mengambil semua perjalanan pengembang.
 
----
+**Returns:** Array of developer journey objects
 
-### 4. `updateDeveloperJourneyService(id, data)`
+### 4. `getOneJourney(req)`
 
-**Deskripsi:** Update journey yang sudah ada (Admin only).
+**Deskripsi:** Mengambil satu perjalanan pengembang berdasarkan ID.
 
 **Parameters:**
 
-- `id` (number) - ID journey
-- `data` (Object) - Data yang akan diupdate (sama seperti create)
+- `req` (Request) - Express request object dengan:
+  - `params.id` (number) - ID perjalanan
 
-**Returns:** Object journey yang sudah diupdate
+**Returns:** Object developer journey
 
-**Throws:**
+### 5. `deleteJourney(req)`
 
-- `NotFoundError` - Jika journey tidak ditemukan
+**Deskripsi:** Menghapus perjalanan pengembang berdasarkan ID.
 
-**Example:**
+**Parameters:**
 
-```javascript
-const updatedJourney = await updateDeveloperJourneyService(1, {
-  name: "Advanced Backend Developer",
-  point: 150,
-});
+- `req` (Request) - Express request object dengan:
+  - `params.id` (number) - ID perjalanan
+
+**Returns:** Object developer journey yang dihapus
+
+---
+
+## Field Details
+
+### `duration` Field
+
+- **Tipe:** Integer
+- **Satuan:** Menit (disimpan dalam database)
+- **Input:** Jam (dikonversi otomatis ke menit)
+- **Default:** 0
+- **Deskripsi:** Durasi yang direncanakan untuk menyelesaikan perjalanan ini. Digunakan untuk menghitung rasio penyelesaian dalam analisis gaya belajar.
+
+**Contoh:**
+
+```
+{
+  "duration": 40 // 40 jam, akan disimpan sebagai 2400 menit
+}
 ```
 
 ---
 
 ## Notes untuk Frontend
 
-1. **Public Access:** `getAllDeveloperJourneysService` bisa diakses tanpa auth
-2. **Admin Only:** Create dan Update hanya untuk admin
-3. **Journey Status:** Filter journey berdasarkan status untuk menampilkan yang active
-4. **Prerequisites:** Check `required_point` dan `required_xp` untuk unlock logic
-5. **Deadline:** Tampilkan countdown jika ada deadline
+1. **Durasi:** Kirim durasi dalam satuan JAM (akan dikonversi ke menit secara otomatis)
+2. **Konsistensi:** Durasi disimpan dalam menit untuk konsistensi dengan `study_duration`
+3. **Validasi:** Pastikan durasi adalah angka positif
 
 ---
 
 ## API Endpoints
 
-| Method | Endpoint            | Function                         | Auth     |
-| ------ | ------------------- | -------------------------------- | -------- |
-| GET    | `/api/journeys`     | `getAllDeveloperJourneysService` | ❌       |
-| GET    | `/api/journeys/:id` | `getDeveloperJourneyByIdService` | ✅       |
-| POST   | `/api/journeys`     | `createDeveloperJourneyService`  | ✅ Admin |
-| PUT    | `/api/journeys/:id` | `updateDeveloperJourneyService`  | ✅ Admin |
+| Method | Endpoint            | Function         | Auth |
+| ------ | ------------------- | ---------------- | ---- |
+| GET    | `/api/journeys`     | `getAllJourneys` | ✅   |
+| POST   | `/api/journeys`     | `createJourney`  | ✅   |
+| GET    | `/api/journeys/:id` | `getOneJourney`  | ✅   |
+| PUT    | `/api/journeys/:id` | `updateJourney`  | ✅   |
+| DELETE | `/api/journeys/:id` | `deleteJourney`  | ✅   |

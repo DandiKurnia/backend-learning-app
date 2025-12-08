@@ -153,6 +153,8 @@ Response:
 
 ## Developer Journeys
 
+Untuk dokumentasi yang lebih lengkap, silakan lihat [developer-journeys-service.md](readme/developer-journeys-service.md)
+
 ### Get All Journeys
 
 **GET** `/api/journeys`
@@ -621,7 +623,7 @@ Response:
     "id": 1,
     "user_id": 1,
     "journey_id": 1,
-    "study_duration": 3600, // 1 jam dalam detik
+    "study_duration": 60, // 1 jam dalam menit
     "enrolling_times": 5,
     "enrollments_at": "2023-01-01T00:00:00.000Z",
     "last_enrolled_at": "2023-01-01T01:00:00.000Z",
@@ -664,7 +666,7 @@ Untuk dokumentasi yang lebih lengkap, silakan lihat [learning-style-analysis.md]
 1. **Pengumpulan Data**: Sistem mengumpulkan data aktivitas pembelajaran termasuk:
 
    - Tingkat penyelesaian modul
-   - Pola durasi belajar
+   - Pola durasi belajar (dalam menit)
    - Rating pengumpulan tugas
    - Metrik keterlibatan
 
@@ -711,7 +713,7 @@ Sistem menyimpan hasil analisis gaya belajar di tabel `UserLearningStyle` dengan
 - `learning_style`: Klasifikasi gaya belajar
 - `description`: Penjelasan terperinci tentang gaya belajar
 - `recommendations`: Array JSON dari rekomendasi yang dipersonalisasi
-- `avg_completion_ratio`: Dasar matematis untuk prediksi
+- `avg_completion_ratio`: Dasar matematis untuk prediksi (rasio antara durasi belajar aktual dan durasi yang direncanakan)
 - `created_at`: Timestamp kapan analisis diselesaikan
 
 ### Privasi dan Keamanan

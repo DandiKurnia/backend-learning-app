@@ -23,8 +23,14 @@ const createJourney = async (req) => {
       required_xp,
       status,
       listed,
+      duration,
       dead_line,
     } = req.body;
+
+    let durationInMinutes = duration;
+    if (duration !== undefined) {
+      durationInMinutes = Math.round(duration * 60);
+    }
 
     // Check duplicate
     const exists = await prisma.developerJourney.findFirst({ where: { name } });
@@ -41,6 +47,7 @@ const createJourney = async (req) => {
         required_xp,
         status,
         listed,
+        duration: durationInMinutes,
         dead_line,
       },
     });
@@ -56,8 +63,8 @@ const getOneJourney = async (req) => {
   try {
     const id = parseInt(req.params.id);
 
-    const result = await prisma.developerJourney.findUnique({ 
-      where: { id } ,
+    const result = await prisma.developerJourney.findUnique({
+      where: { id },
       include: {
         tutorials: {
           select: {
@@ -66,9 +73,8 @@ const getOneJourney = async (req) => {
           },
         },
       }
-    }, 
-
-  );
+    },
+    );
     if (!result) throw new NotFoundError('Journey not found');
 
     return result;
@@ -90,8 +96,16 @@ const updateJourney = async (req) => {
       required_xp,
       status,
       listed,
+      duration,
       dead_line,
     } = req.body;
+
+    // Convert duration from hours to minutes if provided
+    let durationInMinutes = duration;
+    if (duration !== undefined) {
+      // Assuming input is in hours, convert to minutes
+      durationInMinutes = Math.round(duration * 60);
+    }
 
     // Check if journey exists
     const existingJourney = await prisma.developerJourney.findUnique({
@@ -128,6 +142,7 @@ const updateJourney = async (req) => {
         required_xp,
         status,
         listed,
+        duration: durationInMinutes,
         dead_line,
       },
     });
@@ -158,7 +173,7 @@ const deleteJourney = async (req) => {
       where: { id },
     });
 
-    
+
   } catch (error) {
     console.error('Error deleting developer journey:', error);
     throw error;
